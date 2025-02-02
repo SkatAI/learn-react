@@ -4,23 +4,60 @@ import React, { useState, useMemo } from 'react';
 
 function ClientTransactions({ transactions }) {
     const [filterPayee, setFilterPayee] = useState('');
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
+    // Function to handle sorting
+    const handleSort = (key) => {
+        setSortConfig((prevConfig) => {
+            // Toggle sorting direction if the same column is clicked
+            if (prevConfig.key === key) {
+                return { key, direction: prevConfig.direction === 'asc' ? 'desc' : 'asc' };
+            }
+            return { key, direction: 'asc' };
+        });
+    };
+
+    // Sorting logic
+    const sortedTransactions = useMemo(() => {
+        if (!sortConfig.key) return transactions;
+        return [...transactions].sort((a, b) => {
+            let valA = a[sortConfig.key];
+            let valB = b[sortConfig.key];
+
+            // Convert to numbers if sorting by Amount
+            if (sortConfig.key === 'Amount') {
+                valA = parseFloat(valA) || 0;
+                valB = parseFloat(valB) || 0;
+            }
+
+            // Convert to Date object if sorting by Date
+            if (sortConfig.key === 'Date') {
+                valA = new Date(valA);
+                valB = new Date(valB);
+            }
+
+            if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+            if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }, [transactions, sortConfig]);
+
+    // Filtering logic
     const filteredTransactions = useMemo(() => {
-        if (!filterPayee) return transactions;
-        return transactions.filter(transaction =>
+        if (!filterPayee) return sortedTransactions;
+        return sortedTransactions.filter(transaction =>
             transaction.Payee.toLowerCase().includes(filterPayee.toLowerCase())
         );
-    }, [transactions, filterPayee]);
+    }, [sortedTransactions, filterPayee]);
 
+    // Compute total amount
     const totalAmount = useMemo(() => {
         return filteredTransactions.reduce((sum, transaction) => sum + parseFloat(transaction.Amount), 0);
     }, [filteredTransactions]);
 
-
     if (!transactions || transactions.length === 0) {
         return <p>No transactions data available.</p>;
     }
-
 
     return (
         <div>
@@ -35,9 +72,15 @@ function ClientTransactions({ transactions }) {
             <table className="min-w-full border-collapse border border-gray-300">
                 <thead>
                     <tr className="bg-gray-100">
-                        <th className="p-2 border border-gray-300">Date</th>
-                        <th className="p-2 border border-gray-300">Amount</th>
-                        <th className="p-2 border border-gray-300">Payee</th>
+                        <th className="p-2 border border-gray-300 cursor-pointer" onClick={() => handleSort('Date')}>
+                            Date {sortConfig.key === 'Date' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : ''}
+                        </th>
+                        <th className="p-2 border border-gray-300 cursor-pointer" onClick={() => handleSort('Amount')}>
+                            Amount {sortConfig.key === 'Amount' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : ''}
+                        </th>
+                        <th className="p-2 border border-gray-300 cursor-pointer" onClick={() => handleSort('Payee')}>
+                            Payee {sortConfig.key === 'Payee' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : ''}
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
