@@ -15,7 +15,7 @@
 
 - React with Next.js
 - App file system router
-- Tailwind.css
+- Tailwind.css :
 - Node.js
 
 but:

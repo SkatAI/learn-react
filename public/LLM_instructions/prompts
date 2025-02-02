@@ -1,0 +1,37 @@
+# Prompts
+
+## System
+
+* Project: dashboard running on localhost for visualizing banking transactions from my family account.
+* Code: write simple concise code. development environment, not optimised for production. no error handling. no typescript.
+* Style: concise answers, brievety is important
+* Data: transactions loadedd from local csv file in ./public/data.
+
+
+- Application:
+  - React with Next.js
+  - App file system router
+  - Tailwind.css
+  - Node.js
+
+but:
+- Not using Typescript
+
+Before you write code,
+- pause and think about the steps required to create the feature.
+- write what files you are going to modify and why
+
+
+
+## new session
+
+please read the code from drive folder
+
+
+IMPORTANT: use the provided folder as a source of truth
+
+Summarize what you understand
+
+- pay attention to the README.md file
+- Make sure to follow instructions in ./public/LLM_instructions/current_session.md
+
