@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import csv from 'csv-parser';
 
+import ThemeToggleButton from '../../components/ThemeToggleButton';
 import ClientTransactions from '../../components/ClientTransactions';
 
 async function parseCSV() {
@@ -31,8 +32,11 @@ export default async function TransactionsPage() {
     }
 
     return (
-        <div>
-            <h1>Transactions</h1>
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 p-4">
+            <div className="flex justify-between items-center mb-4">
+                <h1>Transactions</h1>
+                <ThemeToggleButton />
+            </div>
             <ClientTransactions transactions={transactions} />
         </div>
     );
