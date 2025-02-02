@@ -17,35 +17,40 @@ describe("ClientTransactions - Filtering Feature", () => {
         });
     });
 
-    // test("filters transactions based on Payee input", () => {
-    //     render(<ClientTransactions transactions={mockTransactions} />);
+    test("filters transactions based on Payee input", () => {
+        render(<ClientTransactions transactions={mockTransactions} />);
 
-    //     // Get input field and filter for "Amazon"
-    //     const input = screen.getByPlaceholderText("Filter by Payee");
-    //     fireEvent.change(input, { target: { value: "Amazon" } });
+        // Get input field and filter for "Amazon"
+        const input = screen.getByPlaceholderText("Filter by Payee");
+        fireEvent.change(input, { target: { value: "Amazon" } });
 
-    //     // Only Amazon transactions should be displayed
-    //     expect(screen.getByText("Amazon")).toBeInTheDocument();
-    //     expect(screen.queryByText("Netflix")).not.toBeInTheDocument();
-    //     expect(screen.queryByText("Spotify")).not.toBeInTheDocument();
-    // });
+        // Get the table body to scope the search
+        const tableBody = screen.getByRole("table").querySelector("tbody");
 
-    // test("clearing filter restores all transactions", () => {
-    //     render(<ClientTransactions transactions={mockTransactions} />);
+        // Only Amazon transactions should be displayed
+        expect(within(tableBody).getAllByText("Amazon")[0]).toBeInTheDocument();
+        expect(within(tableBody).queryByText("Netflix")).not.toBeInTheDocument();
+        expect(within(tableBody).queryByText("Spotify")).not.toBeInTheDocument();
+    });
 
-    //     const input = screen.getByPlaceholderText("Filter by Payee");
+    test("clearing filter restores all transactions", () => {
+        render(<ClientTransactions transactions={mockTransactions} />);
 
-    //     // Apply filter
-    //     fireEvent.change(input, { target: { value: "Amazon" } });
-    //     expect(screen.getByText("Amazon")).toBeInTheDocument();
-    //     expect(screen.queryByText("Netflix")).not.toBeInTheDocument();
+        const input = screen.getByPlaceholderText("Filter by Payee");
+        // Get the table body to scope the search
+        const tableBody = screen.getByRole("table").querySelector("tbody");
 
-    //     // Clear filter
-    //     fireEvent.change(input, { target: { value: "" } });
+        // Apply filter
+        fireEvent.change(input, { target: { value: "Amazon" } });
+        expect(within(tableBody).getAllByText("Amazon")[0]).toBeInTheDocument();
+        expect(within(tableBody).queryByText("Netflix")).not.toBeInTheDocument();
 
-    //     // Expect all transactions to be restored
-    //     mockTransactions.forEach(transaction => {
-    //         expect(screen.getByText(transaction.Payee)).toBeInTheDocument();
-    //     });
-    // });
+        // Clear filter
+        fireEvent.change(input, { target: { value: "" } });
+
+        // Expect all transactions to be restored
+        mockTransactions.forEach(transaction => {
+            expect(within(tableBody).getAllByText(transaction.Payee)[0]).toBeInTheDocument();
+        });
+    });
 });
