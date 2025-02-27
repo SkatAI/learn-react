@@ -6,6 +6,8 @@ import csv from 'csv-parser';
 
 import ThemeToggleButton from '../../components/ThemeToggleButton';
 import ClientTransactions from '../../components/ClientTransactions';
+import LogoutButton from '../../components/LogoutButton';
+import ProtectedContent from './protected-content';
 
 async function parseCSV() {
     const filePath = path.join(process.cwd(), 'public/data/transactions.csv');
@@ -32,12 +34,17 @@ export default async function TransactionsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 p-4">
-            <div className="flex justify-between items-center mb-4">
-                <h1>Transactions</h1>
-                <ThemeToggleButton />
+        <ProtectedContent>
+            <div className="min-h-screen bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 p-4">
+                <div className="flex justify-between items-center mb-4">
+                    <h1>Transactions</h1>
+                    <div className="flex gap-4">
+                        <ThemeToggleButton />
+                        <LogoutButton />
+                    </div>
+                </div>
+                <ClientTransactions transactions={transactions} />
             </div>
-            <ClientTransactions transactions={transactions} />
-        </div>
+        </ProtectedContent>
     );
 }
