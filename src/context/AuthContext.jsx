@@ -5,9 +5,6 @@ import { createContext, useState, useContext, useEffect } from 'react';
 // Create the auth context
 const AuthContext = createContext();
 
-// Password is hardcoded for simplicity
-const CORRECT_PASSWORD = 'bankpass123';
-
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -21,7 +18,10 @@ export function AuthProvider({ children }) {
 
   // Login function
   const login = (password) => {
-    if (password === CORRECT_PASSWORD) {
+    // Get password from environment variable
+    const correctPassword = process.env.NEXT_PUBLIC_AUTH_PASSWORD;
+    
+    if (password === correctPassword) {
       setIsAuthenticated(true);
       localStorage.setItem('isAuthenticated', 'true');
       return true;

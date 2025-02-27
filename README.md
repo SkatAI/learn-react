@@ -1,12 +1,34 @@
-# Prompting
+# Banking Transactions Dashboard
 
-## LLM
+A dashboard running on localhost for visualizing banking transactions from a family account.
 
-Session instructions in ./public/LLM_instructions/current_session.md
+## Getting Started
+
+1. Create a `.env.local` file in the root directory with the following:
+   ```
+   NEXT_PUBLIC_AUTH_PASSWORD=your_password_here
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Run the development server:
+   ```
+   npm run dev
+   ```
+
+## Security Note
+
+The application uses a simple password protection mechanism. In a production environment, you should:
+- Use proper server-side authentication
+- Implement secure session management
+- Store passwords using cryptographic hashing
 
 ## System
 
-Style: concise answers, brievety is important
+Style: concise answers, brevity is important
 Project: a dashboard running on localhost for visualizing banking transactions from my family account.
 Data: transactions available from one or multiple csv files. The files are not included in the repo.
 
