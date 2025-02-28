@@ -1,7 +1,7 @@
 # TODO Next
 
 - in dark mode : colors are not good
--
+- add filter by amount : pos or neg
 - tests
 - refactor
 - add typescript
