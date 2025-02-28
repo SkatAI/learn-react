@@ -1,5 +1,9 @@
 # TODO Next
 
+- tests
+- more password security
+- refactor
+
 ## tests
 add tests for
 - sorting by columns
