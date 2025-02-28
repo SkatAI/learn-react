@@ -89,7 +89,7 @@ function ClientTransactions({ transactions }) {
                 <button
                     key={`page-${page}`}
                     onClick={() => goToPage(page)}
-                    className={`px-3 py-1 border rounded ${currentPage === page ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                    className={`px-3 py-1 border rounded ${currentPage === page ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-600 dark:text-white'}`}
                 >
                     {page}
                 </button>
