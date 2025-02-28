@@ -65,7 +65,7 @@ function ClientTransactions({ transactions }) {
                 <button
                     key={`page-${i + 1}`}
                     onClick={() => goToPage(i + 1)}
-                    className={`px-3 py-1 border rounded ${currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                    className={`px-3 py-1 border rounded ${currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-600 dark:text-white'}`}
                 >
                     {i + 1}
                 </button>
@@ -109,7 +109,7 @@ function ClientTransactions({ transactions }) {
                     placeholder="Filter by Payee"
                     value={filterPayee}
                     onChange={(e) => setFilterPayee(e.target.value)}
-                    className="p-2 border border-gray-300 rounded"
+                    className="p-2 border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white"
                 />
 
                 <select
@@ -118,7 +118,7 @@ function ClientTransactions({ transactions }) {
                         setNumTxnPerPage(parseInt(e.target.value));
                         setCurrentPage(1);
                     }}
-                    className="p-2 border border-gray-300 rounded"
+                    className="p-2 border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white"
                 >
                     <option value={10}>10 per page</option>
                     <option value={20}>20 per page</option>
@@ -126,34 +126,34 @@ function ClientTransactions({ transactions }) {
                 </select>
             </div>
 
-            <table className="min-w-full border-collapse border border-gray-300">
+            <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600">
                 <thead>
-                    <tr className="bg-gray-100">
-                        <th className="p-2 border border-gray-300 cursor-pointer" onClick={() => handleSort('Date')}>
+                    <tr className="bg-gray-100 dark:bg-gray-700">
+                        <th className="p-2 border border-gray-300 dark:border-gray-600 cursor-pointer dark:text-white" onClick={() => handleSort('Date')}>
                             Date {sortConfig.key === 'Date' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : ''}
                         </th>
-                        <th className="p-2 border border-gray-300 cursor-pointer" onClick={() => handleSort('Amount')}>
+                        <th className="p-2 border border-gray-300 dark:border-gray-600 cursor-pointer dark:text-white" onClick={() => handleSort('Amount')}>
                             Amount {sortConfig.key === 'Amount' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : ''}
                         </th>
-                        <th className="p-2 border border-gray-300 cursor-pointer" onClick={() => handleSort('Payee')}>
+                        <th className="p-2 border border-gray-300 dark:border-gray-600 cursor-pointer dark:text-white" onClick={() => handleSort('Payee')}>
                             Payee {sortConfig.key === 'Payee' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : ''}
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     {paginatedTransactions.map((transaction, index) => (
-                        <tr key={index} className="border-b border-gray-300">
-                            <td className="p-2 border border-gray-300">{transaction.Date}</td>
-                            <td className="p-2 border border-gray-300">{transaction.Amount}</td>
-                            <td className="p-2 border border-gray-300">{transaction.Payee}</td>
+                        <tr key={index} className="border-b border-gray-300 dark:border-gray-600">
+                            <td className="p-2 border border-gray-300 dark:border-gray-600 dark:text-white">{transaction.Date}</td>
+                            <td className="p-2 border border-gray-300 dark:border-gray-600 dark:text-white">{transaction.Amount}</td>
+                            <td className="p-2 border border-gray-300 dark:border-gray-600 dark:text-white">{transaction.Payee}</td>
                         </tr>
                     ))}
                 </tbody>
                 <tfoot>
                     <tr className="font-bold">
-                        <td className="p-2 border border-gray-300">Total</td>
-                        <td className="p-2 border border-gray-300">{totalAmount.toFixed(2)}</td>
-                        <td className="p-2 border border-gray-300"></td>
+                        <td className="p-2 border border-gray-300 dark:border-gray-600 dark:text-white">Total</td>
+                        <td className="p-2 border border-gray-300 dark:border-gray-600 dark:text-white">{totalAmount.toFixed(2)}</td>
+                        <td className="p-2 border border-gray-300 dark:border-gray-600"></td>
                     </tr>
                 </tfoot>
             </table>

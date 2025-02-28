@@ -1,8 +1,11 @@
 # TODO Next
 
+- in dark mode : colors are not good
+-
 - tests
-- more password security
 - refactor
+- add typescript
+- more password security
 
 ## tests
 add tests for
