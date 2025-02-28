@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 
 function ClientTransactions({ transactions }) {
     const [filterPayee, setFilterPayee] = useState('');
+    const [amountThreshold, setAmountThreshold] = useState('');
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const [numTxnPerPage, setNumTxnPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
@@ -40,11 +41,26 @@ function ClientTransactions({ transactions }) {
     }, [transactions, sortConfig]);
 
     const filteredTransactions = useMemo(() => {
-        if (!filterPayee) return sortedTransactions;
-        return sortedTransactions.filter(transaction =>
-            transaction.Payee.toLowerCase().includes(filterPayee.toLowerCase())
-        );
-    }, [sortedTransactions, filterPayee]);
+        let filtered = sortedTransactions;
+        
+        // Filter by payee if provided
+        if (filterPayee) {
+            filtered = filtered.filter(transaction =>
+                transaction.Payee.toLowerCase().includes(filterPayee.toLowerCase())
+            );
+        }
+        
+        // Filter by amount threshold if provided
+        if (amountThreshold && !isNaN(parseFloat(amountThreshold))) {
+            const threshold = parseFloat(amountThreshold);
+            filtered = filtered.filter(transaction => {
+                const amount = parseFloat(transaction.Amount);
+                return Math.abs(amount) >= threshold;
+            });
+        }
+        
+        return filtered;
+    }, [sortedTransactions, filterPayee, amountThreshold]);
 
     const totalPages = Math.ceil(filteredTransactions.length / numTxnPerPage);
     const paginatedTransactions = useMemo(() => {
@@ -110,6 +126,19 @@ function ClientTransactions({ transactions }) {
                     value={filterPayee}
                     onChange={(e) => setFilterPayee(e.target.value)}
                     className="p-2 border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white"
+                />
+                
+                <input
+                    type="number"
+                    placeholder="Amount Threshold"
+                    value={amountThreshold}
+                    onChange={(e) => {
+                        setAmountThreshold(e.target.value);
+                        setCurrentPage(1);
+                    }}
+                    className="p-2 border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white"
+                    min="0"
+                    step="any"
                 />
 
                 <select

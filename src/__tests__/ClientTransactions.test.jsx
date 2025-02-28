@@ -9,6 +9,9 @@ describe("ClientTransactions - Filtering Feature", () => {
 
     const SEARCH_PAYEE = "PROTON AG"; // Define constant for an existing payee
     const PAYEE_NOTFOUND = "SomethingThatDoesNotExist"; // Define constant for a non-existent payee
+    const AMOUNT_THRESHOLD = "50"; // Define threshold for amount filter tests
+    const HIGH_AMOUNT_PAYEE = "Garmin"; // A payee with a large transaction amount
+    const LOW_AMOUNT_PAYEE = "RATP"; // A payee with a small transaction amount
 
     beforeAll(async () => {
         transactions = await mockTransactions(); // Wait for CSV data
@@ -77,5 +80,64 @@ describe("ClientTransactions - Filtering Feature", () => {
 
         // Ensure no rows are displayed
         expect(tableBody.childElementCount).toBe(0);
+    });
+
+    test("filters transactions based on amount threshold", async () => {
+        render(<ClientTransactions transactions={transactions} />);
+        fireEvent.change(screen.getByRole("combobox"), { target: { value: "50" } });
+
+        // Get the table body
+        const tableBody = await waitFor(() => screen.getByRole("table").querySelector("tbody"));
+
+        // Type in the amount threshold input
+        const thresholdInput = screen.getByPlaceholderText("Amount Threshold");
+        fireEvent.change(thresholdInput, { target: { value: AMOUNT_THRESHOLD } });
+
+        // Wait for filtering to complete
+        await waitFor(() => {
+            // High amount transactions should be visible
+            expect(within(tableBody).queryByText(HIGH_AMOUNT_PAYEE)).toBeInTheDocument();
+        });
+
+        // Check that low amount transactions are not displayed
+        const lowAmountTransactions = within(tableBody).queryAllByText(LOW_AMOUNT_PAYEE);
+        expect(lowAmountTransactions.length).toBe(0);
+
+        // Verify that only transactions with amounts >= threshold are shown
+        const rows = tableBody.querySelectorAll('tr');
+        rows.forEach(row => {
+            const amountCell = row.querySelectorAll('td')[1];
+            const amount = parseFloat(amountCell.textContent);
+            expect(Math.abs(amount)).toBeGreaterThanOrEqual(parseFloat(AMOUNT_THRESHOLD));
+        });
+    });
+
+    test("combines payee and amount threshold filters", async () => {
+        render(<ClientTransactions transactions={transactions} />);
+        fireEvent.change(screen.getByRole("combobox"), { target: { value: "50" } });
+
+        // Get the table body
+        const tableBody = await waitFor(() => screen.getByRole("table").querySelector("tbody"));
+
+        // Type in the payee filter
+        const payeeInput = screen.getByPlaceholderText("Filter by Payee");
+        fireEvent.change(payeeInput, { target: { value: "MR" } });
+
+        // Type in the amount threshold input
+        const thresholdInput = screen.getByPlaceholderText("Amount Threshold");
+        fireEvent.change(thresholdInput, { target: { value: AMOUNT_THRESHOLD } });
+
+        // Verify that only transactions that match both filters are shown
+        const rows = tableBody.querySelectorAll('tr');
+        rows.forEach(row => {
+            const payeeCell = row.querySelectorAll('td')[2];
+            const amountCell = row.querySelectorAll('td')[1];
+            
+            const payeeText = payeeCell.textContent;
+            const amount = parseFloat(amountCell.textContent);
+            
+            expect(payeeText).toMatch(/MR/i);
+            expect(Math.abs(amount)).toBeGreaterThanOrEqual(parseFloat(AMOUNT_THRESHOLD));
+        });
     });
 });
