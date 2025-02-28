@@ -1,10 +1,14 @@
 'use client';
 
+import React, { FC, ReactNode, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
-export default function ProtectedContent({ children }) {
+interface ProtectedContentProps {
+  children: ReactNode;
+}
+
+const ProtectedContent: FC<ProtectedContentProps> = ({ children }) => {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
 
@@ -28,4 +32,6 @@ export default function ProtectedContent({ children }) {
   }
 
   return <>{children}</>;
-}
+};
+
+export default ProtectedContent;

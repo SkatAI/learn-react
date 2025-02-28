@@ -1,16 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, FormEvent, ChangeEvent, FC } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';
 
-export default function LoginForm() {
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+const LoginForm: FC = () => {
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
   const { login } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const success = login(password);
     
@@ -42,7 +42,7 @@ export default function LoginForm() {
               type="password"
               id="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-800 dark:text-white"
               required
             />
@@ -58,4 +58,6 @@ export default function LoginForm() {
       </div>
     </div>
   );
-}
+};
+
+export default LoginForm;

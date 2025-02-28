@@ -1,13 +1,15 @@
 'use client';
 
+import React, { FC, MouseEvent } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';
 
-export default function LogoutButton() {
+const LogoutButton: FC = () => {
   const { logout } = useAuth();
   const router = useRouter();
 
-  const handleLogout = () => {
+  const handleLogout = (e: MouseEvent<HTMLButtonElement>): void => {
+    e.preventDefault();
     logout();
     router.push('/');
   };
@@ -20,4 +22,6 @@ export default function LogoutButton() {
       Logout
     </button>
   );
-}
+};
+
+export default LogoutButton;

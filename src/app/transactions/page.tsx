@@ -1,30 +1,31 @@
-// app/transactions/page.jsx
+// app/transactions/page.tsx
 
 import fs from 'fs';
 import path from 'path';
 import csv from 'csv-parser';
+import React from 'react';
 
 import ThemeToggleButton from '../../components/ThemeToggleButton';
 import ClientTransactions from '../../components/ClientTransactions';
 import LogoutButton from '../../components/LogoutButton';
 import ProtectedContent from './protected-content';
+import { Transaction } from '../../types';
 
-async function parseCSV() {
+async function parseCSV(): Promise<Transaction[]> {
     const filePath = path.join(process.cwd(), 'public/data/transactions.csv');
 
     return new Promise((resolve, reject) => {
-        // Remove the type annotation
-        const results = [];
+        const results: Transaction[] = [];
         fs.createReadStream(filePath)
             .pipe(csv())
-            .on('data', (data) => results.push(data))
+            .on('data', (data: Transaction) => results.push(data))
             .on('end', () => resolve(results))
-            .on('error', (error) => reject(error));
+            .on('error', (error: Error) => reject(error));
     });
 }
 
-export default async function TransactionsPage() {
-    let transactions = [];
+export default async function TransactionsPage(): Promise<React.ReactElement> {
+    let transactions: Transaction[] = [];
 
     try {
         transactions = await parseCSV();

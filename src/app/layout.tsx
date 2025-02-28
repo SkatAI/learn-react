@@ -1,3 +1,4 @@
+import React from 'react';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "../context/AuthContext";
@@ -17,7 +18,11 @@ export const metadata = {
   description: "View and manage your bank transactions",
 };
 
-export default function RootLayout({ children }) {
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps): React.ReactElement {
   return (
     <html lang="en">
       <body

@@ -1,15 +1,20 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, FC, ChangeEvent } from 'react';
+import { Transaction, SortConfig } from '../types';
 
-function ClientTransactions({ transactions }) {
-    const [filterPayee, setFilterPayee] = useState('');
-    const [amountThreshold, setAmountThreshold] = useState('');
-    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
-    const [numTxnPerPage, setNumTxnPerPage] = useState(10);
-    const [currentPage, setCurrentPage] = useState(1);
+interface ClientTransactionsProps {
+  transactions: Transaction[];
+}
 
-    const handleSort = (key) => {
+const ClientTransactions: FC<ClientTransactionsProps> = ({ transactions }) => {
+    const [filterPayee, setFilterPayee] = useState<string>('');
+    const [amountThreshold, setAmountThreshold] = useState<string>('');
+    const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
+    const [numTxnPerPage, setNumTxnPerPage] = useState<number>(10);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+
+    const handleSort = (key: string): void => {
         setSortConfig((prevConfig) => {
             if (prevConfig.key === key) {
                 return { key, direction: prevConfig.direction === 'asc' ? 'desc' : 'asc' };
@@ -21,8 +26,8 @@ function ClientTransactions({ transactions }) {
     const sortedTransactions = useMemo(() => {
         if (!sortConfig.key) return transactions;
         return [...transactions].sort((a, b) => {
-            let valA = a[sortConfig.key];
-            let valB = b[sortConfig.key];
+            let valA: any = a[sortConfig.key as keyof Transaction];
+            let valB: any = b[sortConfig.key as keyof Transaction];
 
             if (sortConfig.key === 'Amount') {
                 valA = parseFloat(valA) || 0;
@@ -72,7 +77,7 @@ function ClientTransactions({ transactions }) {
         return filteredTransactions.reduce((sum, transaction) => sum + parseFloat(transaction.Amount), 0);
     }, [filteredTransactions]);
 
-    const goToPage = (page) => setCurrentPage(page);
+    const goToPage = (page: number): void => setCurrentPage(page);
 
     // Generate pagination numbers with unique keys
     const renderPagination = () => {
@@ -88,7 +93,7 @@ function ClientTransactions({ transactions }) {
             ));
         }
 
-        let pages = new Set(); // Use Set to avoid duplicates
+        let pages = new Set<number | string>(); // Use Set to avoid duplicates
         pages.add(1);
         if (currentPage > 3) pages.add('ellipsis-1');
         if (currentPage > 2) pages.add(currentPage - 1);
@@ -104,7 +109,7 @@ function ClientTransactions({ transactions }) {
             return (
                 <button
                     key={`page-${page}`}
-                    onClick={() => goToPage(page)}
+                    onClick={() => goToPage(page as number)}
                     className={`px-3 py-1 border rounded ${currentPage === page ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-600 dark:text-white'}`}
                 >
                     {page}
@@ -124,7 +129,7 @@ function ClientTransactions({ transactions }) {
                     type="text"
                     placeholder="Filter by Payee"
                     value={filterPayee}
-                    onChange={(e) => setFilterPayee(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterPayee(e.target.value)}
                     className="p-2 border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white"
                 />
                 
@@ -132,7 +137,7 @@ function ClientTransactions({ transactions }) {
                     type="number"
                     placeholder="Amount Threshold"
                     value={amountThreshold}
-                    onChange={(e) => {
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
                         setAmountThreshold(e.target.value);
                         setCurrentPage(1);
                     }}
@@ -143,7 +148,7 @@ function ClientTransactions({ transactions }) {
 
                 <select
                     value={numTxnPerPage}
-                    onChange={(e) => {
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                         setNumTxnPerPage(parseInt(e.target.value));
                         setCurrentPage(1);
                     }}
@@ -193,6 +198,6 @@ function ClientTransactions({ transactions }) {
             </div>
         </div>
     );
-}
+};
 
 export default ClientTransactions;
